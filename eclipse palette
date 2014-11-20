@@ -1,0 +1,131 @@
+Java Code Examples for org.eclipse.gef.palette.PaletteDrawer
+Code Example 1:
+
+From project android_sdk, under directory /eclipse/plugins/com.android.ide.eclipse.adt/src/com/android/ide/eclipse/adt/internal/editors/layout/gle1/.
+
+Source PaletteFactory.java
+
+private static void addViews(PaletteRoot paletteRoot,String groupName,List<ElementDescriptor> descriptors){
+  PaletteDrawer group=new PaletteDrawer(groupName);
+  for (  ElementDescriptor desc : descriptors) {
+    PaletteTemplateEntry entry=new PaletteTemplateEntry(desc.getUiName(),desc.getTooltip(),desc,desc.getImageDescriptor(),desc.getImageDescriptor());
+    group.add(entry);
+  }
+  paletteRoot.add(group);
+}
+
+Code Example 2:
+
+From project cdo, under directory /plugins/org.eclipse.emf.cdo.dawn.examples.acore.diagram/src/org/eclipse/emf/cdo/dawn/examples/acore/diagram/part/.
+
+Source AcorePaletteFactory.java
+
+/** 
+ * Creates "Node" palette tool group
+ * @generated
+ */
+private PaletteContainer createNode1Group(){
+  PaletteDrawer paletteContainer=new PaletteDrawer(Messages.Node1Group_title);
+  paletteContainer.setId("createNode1Group");
+  paletteContainer.add(createAClass1CreationTool());
+  paletteContainer.add(createAInterface2CreationTool());
+  paletteContainer.add(createAAttribute3CreationTool());
+  paletteContainer.add(createAOperation4CreationTool());
+  return paletteContainer;
+}
+ 
+ /** 
+ * Creates "Connections" palette tool group
+ * @generated
+ */
+private PaletteContainer createConnections2Group(){
+  PaletteDrawer paletteContainer=new PaletteDrawer(Messages.Connections2Group_title);
+  paletteContainer.setId("createConnections2Group");
+  paletteContainer.add(createInherits1CreationTool());
+  paletteContainer.add(createImplements2CreationTool());
+  paletteContainer.add(createAssociation3CreationTool());
+  paletteContainer.add(createAggregation4CreationTool());
+  paletteContainer.add(createComposition5CreationTool());
+  return paletteContainer;
+}
+ /** 
+ * Creates "Objects" palette tool group
+ * @generated
+ */
+private PaletteContainer createObjects1Group(){
+  PaletteDrawer paletteContainer=new PaletteDrawer(Messages.Objects1Group_title);
+  paletteContainer.setId("createObjects1Group");
+  paletteContainer.add(createArgumentNode1CreationTool());
+  paletteContainer.add(createAssumptionNode2CreationTool());
+  paletteContainer.add(createClaimNode3CreationTool());
+  paletteContainer.add(createContextNode4CreationTool());
+  paletteContainer.add(createEvidenceNode5CreationTool());
+  paletteContainer.add(createJustificationNode6CreationTool());
+  return paletteContainer;
+}
+/** 
+ * Creates "Objects" palette tool group
+ * @generated
+ */
+private PaletteContainer createObjects1Group(){
+  PaletteDrawer paletteContainer=new PaletteDrawer(Messages.Objects1Group_title);
+  paletteContainer.setId("createObjects1Group");
+  paletteContainer.add(createArgumentNode1CreationTool());
+  paletteContainer.add(createAssumptionNode2CreationTool());
+  paletteContainer.add(createContextNode3CreationTool());
+  paletteContainer.add(createCriteriaNode4CreationTool());
+  paletteContainer.add(createEvidenceNode5CreationTool());
+  paletteContainer.add(createJustificationNode6CreationTool());
+  paletteContainer.add(createSolutionNode7CreationTool());
+  paletteContainer.add(createStrategyNode8CreationTool());
+  return paletteContainer;
+}
+ /** 
+ * Creates "Objects" palette tool group
+ * @generated
+ */
+private PaletteContainer createObjects1Group(){
+  PaletteDrawer paletteContainer=new PaletteDrawer(Messages.Objects1Group_title);
+  paletteContainer.setId("createObjects1Group");
+  paletteContainer.add(createAssumptionNode1CreationTool());
+  paletteContainer.add(createContextNode2CreationTool());
+  paletteContainer.add(createEvidence3CreationTool());
+  paletteContainer.add(createGoalNode4CreationTool());
+  paletteContainer.add(createJustificationNode5CreationTool());
+  paletteContainer.add(createSolutionNode6CreationTool());
+  paletteContainer.add(createStrategyNode7CreationTool());
+  return paletteContainer;
+}
+ /** 
+ * Change to make first palette open and others closed, as we will put the most important actors in this palette.
+ * @param name
+ * @param image
+ * @return
+ */
+static private PaletteContainer createPaletteContainer(final String name,final ImageDescriptor image,final boolean open){
+  PaletteDrawer drawer=new PaletteDrawer(name,image);
+  if (open) {
+    drawer.setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
+  }
+ else {
+    drawer.setInitialState(PaletteDrawer.INITIAL_STATE_CLOSED);
+  }
+  return drawer;
+}
+
+From project gef, under directory /org.eclipse.gef.examples.flow/src/org/eclipse/gef/examples/flow/.
+
+Source FlowEditorPaletteFactory.java
+
+private static PaletteContainer createComponentsDrawer(){
+  PaletteDrawer drawer=new PaletteDrawer("Components",null);
+  List entries=new ArrayList();
+  CombinedTemplateCreationEntry combined=new CombinedTemplateCreationEntry("Activity","Create a new Activity Node",Activity.class,new SimpleFactory(Activity.class),ImageDescriptor.createFromFile(FlowPlugin.class,"images/gear16.gif"),ImageDescriptor.createFromFile(Activity.class,"images/gear16.gif"));
+  entries.add(combined);
+  combined=new CombinedTemplateCreationEntry("Sequential Activity","Create a Sequential Activity",SequentialActivity.class,new SimpleFactory(SequentialActivity.class),ImageDescriptor.createFromFile(FlowPlugin.class,"images/sequence16.gif"),ImageDescriptor.createFromFile(FlowPlugin.class,"images/sequence16.gif"));
+  entries.add(combined);
+  combined=new CombinedTemplateCreationEntry("Parallel Activity","Create a  Parallel Activity",ParallelActivity.class,new SimpleFactory(ParallelActivity.class),ImageDescriptor.createFromFile(FlowPlugin.class,"images/parallel16.gif"),ImageDescriptor.createFromFile(FlowPlugin.class,"images/parallel16.gif"));
+  entries.add(combined);
+  drawer.addAll(entries);
+  return drawer;
+}

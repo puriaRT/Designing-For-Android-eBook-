@@ -1,0 +1,369 @@
+activity_main.xml
+
+view sourceprint?
+01
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+02
+    xmlns:tools="http://schemas.android.com/tools"
+03
+    android:layout_width="match_parent"
+04
+    android:layout_height="match_parent"
+05
+    android:background="#ffffff"
+06
+    android:orientation="vertical" >
+07
+ 
+08
+    <ListView
+09
+        android:id="@android:id/list"
+10
+        android:layout_width="match_parent"
+11
+        android:layout_height="wrap_content" >
+12
+    </ListView>
+13
+ 
+14
+</LinearLayout>
+
+
+public class Book {
+04
+ 
+05
+    private int id;
+06
+    private String title;
+07
+    private String author;
+08
+     
+09
+    public Book(){}
+10
+     
+11
+    public Book(String title, String author) {
+12
+        super();
+13
+        this.title = title;
+14
+        this.author = author;
+15
+    }
+16
+     
+17
+    public int getId() {
+18
+        return id;
+19
+    }
+20
+    public void setId(int id) {
+21
+        this.id = id;
+22
+    }
+23
+    public String getTitle() {
+24
+        return title;
+25
+    }
+26
+    public void setTitle(String title) {
+27
+        this.title = title;
+28
+    }
+29
+    public String getAuthor() {
+30
+        return author;
+31
+    }
+32
+    public void setAuthor(String author) {
+33
+        this.author = author;
+34
+    }
+35
+     
+36
+    @Override
+37
+    public String toString() {
+38
+        return "Book [id=" + id + ", title=" + title + ", author=" + author
+39
+                + "]";
+40
+    }
+41
+}
+import java.util.LinkedList;
+004
+import java.util.List;
+005
+ 
+006
+import android.content.ContentValues;
+007
+import android.content.Context;
+008
+import android.database.Cursor;
+009
+import android.database.sqlite.SQLiteDatabase;
+010
+import android.database.sqlite.SQLiteOpenHelper;
+011
+ 
+012
+public class JCGSQLiteHelper extends SQLiteOpenHelper {
+013
+ 
+014
+    // database version
+015
+    private static final int database_VERSION = 1;
+016
+    // database name
+017
+    private static final String database_NAME = "BookDB";
+018
+    private static final String table_BOOKS = "books";
+019
+    private static final String book_ID = "id";
+020
+    private static final String book_TITLE = "title";
+021
+    private static final String book_AUTHOR = "author";
+022
+ 
+023
+    private static final String[] COLUMNS = { book_ID, book_TITLE, book_AUTHOR };
+024
+ 
+025
+    public JCGSQLiteHelper(Context context) {
+026
+        super(context, database_NAME, null, database_VERSION);
+027
+    }
+028
+ 
+029
+    @Override
+030
+    public void onCreate(SQLiteDatabase db) {
+031
+        // SQL statement to create book table
+032
+        String CREATE_BOOK_TABLE = "CREATE TABLE books ( " + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "title TEXT, " + "author TEXT )";
+033
+        db.execSQL(CREATE_BOOK_TABLE);
+034
+    }
+035
+ 
+036
+    @Override
+037
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+038
+        // drop books table if already exists
+039
+        db.execSQL("DROP TABLE IF EXISTS books");
+040
+        this.onCreate(db);
+041
+    }
+042
+ 
+043
+    public void createBook(Book book) {
+044
+        // get reference of the BookDB database
+045
+        SQLiteDatabase db = this.getWritableDatabase();
+046
+ 
+047
+        // make values to be inserted
+048
+        ContentValues values = new ContentValues();
+049
+        values.put(book_TITLE, book.getTitle());
+050
+        values.put(book_AUTHOR, book.getAuthor());
+051
+ 
+052
+        // insert book
+053
+        db.insert(table_BOOKS, null, values);
+054
+ 
+055
+        // close database transaction
+056
+        db.close();
+057
+    }
+058
+ 
+059
+    public Book readBook(int id) {
+060
+        // get reference of the BookDB database
+061
+        SQLiteDatabase db = this.getReadableDatabase();
+062
+ 
+063
+        // get book query
+064
+        Cursor cursor = db.query(table_BOOKS, // a. table
+065
+                COLUMNS, " id = ?", new String[] { String.valueOf(id) }, null, null, null, null);
+066
+ 
+067
+        // if results !=null, parse the first one
+068
+        if (cursor != null)
+069
+            cursor.moveToFirst();
+070
+ 
+071
+        Book book = new Book();
+072
+        book.setId(Integer.parseInt(cursor.getString(0)));
+073
+        book.setTitle(cursor.getString(1));
+074
+        book.setAuthor(cursor.getString(2));
+075
+ 
+076
+        return book;
+077
+    }
+078
+ 
+079
+    public List getAllBooks() {
+080
+        List books = new LinkedList();
+081
+ 
+082
+        // select book query
+083
+        String query = "SELECT  * FROM " + table_BOOKS;
+084
+ 
+085
+        // get reference of the BookDB database
+086
+        SQLiteDatabase db = this.getWritableDatabase();
+087
+        Cursor cursor = db.rawQuery(query, null);
+088
+ 
+089
+        // parse all results
+090
+        Book book = null;
+091
+        if (cursor.moveToFirst()) {
+092
+            do {
+093
+                book = new Book();
+094
+                book.setId(Integer.parseInt(cursor.getString(0)));
+095
+                book.setTitle(cursor.getString(1));
+096
+                book.setAuthor(cursor.getString(2));
+097
+ 
+098
+                // Add book to books
+099
+                books.add(book);
+100
+            } while (cursor.moveToNext());
+101
+        }
+102
+        return books;
+103
+    }
+104
+ 
+105
+    public int updateBook(Book book) {
+106
+ 
+107
+        // get reference of the BookDB database
+108
+        SQLiteDatabase db = this.getWritableDatabase();
+109
+ 
+110
+        // make values to be inserted
+111
+        ContentValues values = new ContentValues();
+112
+        values.put("title", book.getTitle()); // get title
+113
+        values.put("author", book.getAuthor()); // get author
+114
+ 
+115
+        // update
+116
+        int i = db.update(table_BOOKS, values, book_ID + " = ?", new String[] { String.valueOf(book.getId()) });
+117
+ 
+118
+        db.close();
+119
+        return i;
+120
+    }
+121
+ 
+122
+    // Deleting single book
+123
+    public void deleteBook(Book book) {
+124
+ 
+125
+        // get reference of the BookDB database
+126
+        SQLiteDatabase db = this.getWritableDatabase();
+127
+ 
+128
+        // delete book
+129
+        db.delete(table_BOOKS, book_ID + " = ?", new String[] { String.valueOf(book.getId()) });
+130
+        db.close();
+131
+    }
+132
+}

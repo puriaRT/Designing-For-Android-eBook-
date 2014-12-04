@@ -1,0 +1,73 @@
+TabsPagerAdapter.java
+package info.androidhive.tabsswipe.adapter;
+ 
+import info.androidhive.tabsswipe.GamesFragment;
+import info.androidhive.tabsswipe.MoviesFragment;
+import info.androidhive.tabsswipe.TopRatedFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+ 
+public class TabsPagerAdapter extends FragmentPagerAdapter {
+ 
+    public TabsPagerAdapter(FragmentManager fm) {
+        super(fm);
+    }
+ 
+    @Override
+    public Fragment getItem(int index) {
+ 
+        switch (index) {
+        case 0:
+            // Top Rated fragment activity
+            return new TopRatedFragment();
+        case 1:
+            // Games fragment activity
+            return new GamesFragment();
+        case 2:
+            // Movies fragment activity
+            return new MoviesFragment();
+        }
+ 
+        return null;
+    }
+ 
+    @Override
+    public int getCount() {
+        // get item count - equal to number of tabs
+        return 3;
+        }
+ 
+}
+
+
+
+MainActivity.java
+public class MainActivity extends FragmentActivity implements
+        ActionBar.TabListener {
+ 
+    private ViewPager viewPager;
+    private TabsPagerAdapter mAdapter;
+    private ActionBar actionBar;
+    // Tab titles
+    private String[] tabs = { "Top Rated", "Games", "Movies" };
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+ 
+        // Initilization
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        actionBar = getActionBar();
+        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+ 
+        viewPager.setAdapter(mAdapter);
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);        
+ 
+        // Adding Tabs
+        for (String tab_name : tabs) {
+            actionBar.addTab(actionBar.newTab().setText(tab_name)
+                    .setTabListener(this));
+        }
